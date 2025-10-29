@@ -1,0 +1,91 @@
+.room-info {
+  background-color: #a9820e;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
+  margin-top: 40px;
+}
+
+.room-info ul li {
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+.room-info p.room-description {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #333;
+}
+
+.booking-form .btn-dark {
+  background-color: #000 !important;
+  border-color: #000 !important;
+  transition: background-color 0.3s ease;
+}
+
+.booking-form .btn-dark:hover {
+  background-color: #333 !important;
+  border-color: #333 !important;
+}
+
+/* Breadcrumb link style */
+.breadcrumb-container {
+  font-size: 5rem;
+  margin-top: 80px;
+  margin-bottom: 10rem;
+}
+.breadcrumb-link {
+  color: #0d6efd;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.breadcrumb-link:hover {
+  text-decoration: underline;
+  color: #0a58ca;
+}
+.breadcrumb-current {
+  color: #c62810;
+  font-weight: 500;
+}
+.bg-light {
+  --bs-light-rgb: 214, 199, 184;
+}
+.thumbnail-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-start;
+  margin-top: 10px;
+}
+
+.thumbnail-images img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.thumbnail-images img:hover {
+  transform: scale(1.1);
+  z-index: 10;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+.btn-primary {
+  --bs-btn-color: black;
+  --bs-btn-bg: #ffffff;
+  opacity: 60%;
+  --bs-btn-border-color: none;
+  --bs-btn-hover-color: #443636;
+  --bs-btn-hover-bg: #b5a78354;
+  --bs-btn-hover-border-color: #0a58ca;
+  --bs-btn-focus-shadow-rgb: 49, 132, 253;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: black;
+  --bs-btn-active-border-color: #0a53be;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #0d6efd;
+  --bs-btn-disabled-border-color: #0d6efd;
+}

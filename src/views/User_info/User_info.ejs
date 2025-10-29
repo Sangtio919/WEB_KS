@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Thông tin tài khoản</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <link rel="stylesheet" href="/details_homestay.css" />
+    <!-- Lightbox CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet" />
+
+    <!-- Lightbox JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .suggested-rooms-wrapper {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 0, 10px;
+        margin-left: 40px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+
+    }
+
+    .suggested-rooms-wrapper a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .suggested-rooms-wrapper a:hover {
+        text-decoration: underline;
+    }
+
+    .suggested-rooms-wrapper {
+        background-color: #fff7e6;
+        background: #f3e6dc;
+        border-radius: 8px;
+        /* padding: 20px; */
+        margin-left: 40px;
+        box-shadow: 10px 10px 15px rgba(202, 131, 131, 0.1);
+        opacity: 1;
+    }
+
+    /* Tiêu đề căn giữa */
+    .suggested-rooms-wrapper>h5 {
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 20px;
+
+
+    }
+
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    */
+</style>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="
+        width: 100%;
+        opacity: 80%;
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        left: 0;
+      ">
+        <!-- Logo bên trái -->
+        <a class="navbar-brand" href="/">
+            <img src="/image/image/logo/logo.jpg" alt="Logo" style="
+            margin: 0px;
+            padding: 0px;
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            margin-top: -50px;
+            margin-left: 70px;
+          " class="logo" />
+        </a>
+        <div class="container kt">
+            <!-- Nút Toggle khi màn hình nhỏ -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Danh mục menu (Căn giữa) -->
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav" style="margin-left: 50px">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/" style="font-weight: bold">TRANG CHỦ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#intro" style="font-weight: bold">GIỚI THIỆU</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#CH" style="font-weight: bold">CĂN HỘ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#LH" style="font-weight: bold">LIÊN HỆ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/#DG" style="font-weight: bold">ĐÁNH GIÁ</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Nút Đăng nhập/Đăng xuất (Bên phải) -->
+            <% if (user) { %>
+                <div class="dropdown">
+                    <button class="btn p-0 border-0 bg-transparent" type="button" id="userDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
+                        <li><span class="dropdown-item text-primary fw-bold">
+                                <p class="fw-bold">
+                                    <%= user?.email %>
+                                </p>
+                            </span></li>
+                        <li><a class="dropdown-item" href="/account">Thông tin tài khoản</a></li>
+                        <li><a class="dropdown-item" href="/bookings">Lịch sử giao dịch</a></li>
+                        <li>
+                            <hr class="dropdown-divider" />
+                        </li>
+                        <li><a class="dropdown-item text-danger" href="/logout">Đăng xuất</a></li>
+                    </ul>
+                </div>
+                <% } else { %>
+                    <button class="btn btn-primary" onclick="window.location.href='/login'"
+                        style="background-color: white;">
+                        ĐĂNG NHẬP
+                    </button>
+                    <% } %>
+        </div>
+    </nav>
+    </div>
+    <div class="product-info-container container my-5" style="padding-top: 0.5px">
+        <div class="container">
+            <div class="breadcrumb mt-5 mb-3">
+                <a href="/" class="breadcrumb-link">Trang chủ</a> /
+
+                <span class="breadcrumb-current">Thông tin tài khoản</span>
+            </div>
+
+        </div>
+        <!-- -->
+        <div class="container mt-5 pt-5">
+            <div class="row justify-content-center">
+                <!-- Cột trái: Avatar + menu -->
+                <div class="col-md-3 mb-4">
+                    <div class="bg-white p-4 text-center rounded shadow-sm">
+                        <img src="https://i.postimg.cc/rF3Fh10Y/avatar-trang-4.jpg" alt="Avatar"
+                            class="rounded-circle mb-3" width="120" />
+                        <p class="fw-bold">
+                            <%= user.email %>
+                        </p>
+                        <hr />
+                        <div class="text-start">
+                            <p><a href="#" id="btn-info" class="text-decoration-none fw-bold text-dark"
+                                    onclick="showTab('info')">Thông tin tài khoản</a></p>
+                            <p><a href="#" id="btn-password" class="text-decoration-none text-secondary"
+                                    onclick="showTab('password')">Đổi mật khẩu</a></p>
+                            <p><a href="#" id="btn-booking" class="text-decoration-none text-secondary"
+                                    onclick="showTab('booking')">Lịch sử giao dịch</a></p>
+                            <p><a href="/logout" class="text-danger text-decoration-none">Đăng xuất</a></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cột phải: Form cập nhật -->
+
+                <div class="col-md-9">
+                    <% if (message) { %>
+                        <script>
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Chúc mừng: ',
+                                text: "<%= message %>",
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        </script>
+                        <% } %>
+                            <div id="tab-info">
+                                <div class="bg-white p-4 rounded shadow-sm">
+                                    <h4 class="mb-4 fw-bold text-center">THÔNG TIN CÁ NHÂN</h4>
+                                    <form action="/account/update" method="POST">
+                                        <div class="mb-3">
+                                            <label class="form-label">Họ và tên</label>
+                                            <input name="name" class="form-control" value="<%= userData.name %>" />
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Số điện thoại</label>
+                                            <input name="phone" class="form-control" value="<%= userData.phone %>" />
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Ngày sinh (mm/dd/yyyy)</label>
+                                            <input type="date" name="dob" class="form-control"
+                                                value="<%= userData.dobFormatted || '' %>" />
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label d-block">Giới tính</label>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="gender" value="male"
+                                                    <%=userData.gender==='male' ? 'checked' : '' %> />
+                                                <label class="form-check-label">Nam</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="gender"
+                                                    value="female" <%=userData.gender==='female' ? 'checked' : '' %> />
+                                                <label class="form-check-label">Nữ</label>
+                                            </div>
+                                        </div>
+                                        <div class="text-end">
+                                            <button type="submit" class="btn"
+                                                style="background-color: #e5d6c5; color: black;">Cập nhật</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Cột phải: Form đổi mật khẩu -->
+                            <div id="tab-password" style="display: none;">
+                                <div class="bg-white p-4 rounded shadow-sm">
+                                    <h4 class="mb-4 fw-bold text-center">ĐỔI MẬT KHẨU</h4>
+                                    <form action="/change-password" method="POST" onsubmit="return validatePassword();">
+                                        <!-- Mật khẩu hiện tại -->
+                                        <div class="mb-3 position-relative">
+                                            <label class="form-label">Mật khẩu hiện tại</label>
+                                            <input type="password" id="currentPassword" name="currentPassword"
+                                                class="form-control" required
+                                                oninput="updateTyped('currentPassword')" />
+                                            <i class="fas fa-eye toggle-password" data-target="currentPassword"
+                                                style="position: absolute; top: 38px; right: 10px; cursor: pointer;"></i>
+                                            <div class="form-check mt-2">
+
+
+                                                <div id="typed_currentPassword" class="mt-1 text-muted small"
+                                                    style="display: none;"></div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Mật khẩu mới -->
+                                        <div class="mb-3 position-relative">
+                                            <label class="form-label">Mật khẩu mới</label>
+                                            <input type="password" id="newPassword" name="newPassword"
+                                                class="form-control" required oninput="updateTyped('newPassword')" />
+                                            <i class="fas fa-eye toggle-password" data-target="newPassword"
+                                                style="position: absolute; top: 38px; right: 10px; cursor: pointer;"></i>
+                                            <div class="form-check mt-2">
+
+
+                                                <div id="typed_newPassword" class="mt-1 text-muted small"
+                                                    style="display: none;"></div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Xác nhận mật khẩu mới -->
+                                        <div class="mb-3 position-relative">
+                                            <label class="form-label">Xác nhận mật khẩu mới</label>
+                                            <input type="password" id="confirmPassword" name="confirmPassword"
+                                                class="form-control" required
+                                                oninput="updateTyped('confirmPassword')" />
+                                            <i class="fas fa-eye toggle-password" data-target="confirmPassword"
+                                                style="position: absolute; top: 38px; right: 10px; cursor: pointer;"></i>
+                                            <div class="form-check mt-2">
+
+
+                                                <div id="typed_confirmPassword" class="mt-1 text-muted small"
+                                                    style="display: none;"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="text-end">
+                                            <button type="submit" class="btn"
+                                                style="background-color: #e5d6c5; color: black;">Xác nhận</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- Tab: LỊCH SỬ ĐẶT PHÒNG -->
+                            <div id="tab-booking" style="display: none;">
+                                <div class="bg-white p-4 rounded shadow-sm">
+                                    <h4 class="mb-4 fw-bold text-center">LỊCH SỬ GIAO DỊCH</h4>
+                                    <% if (bookings && bookings.length> 0) { %>
+                                        <div style="max-height: 500px; overflow-y: auto; border: 1px solid #ccc;">
+                                            <table class="table table-bordered text-center align-middle"
+                                                style="table-layout: fixed; width: 100%;">
+                                                <thead class="table-warning"
+                                                    style="display: table; width: 100%; table-layout: fixed;">
+                                                    <tr>
+                                                        <th style="width: 60px; white-space: nowrap;">STT</th>
+                                                        <th style="width: 60px; white-space: nowrap;">Mã</th>
+                                                        <th style="width: 180px; white-space: nowrap;">Họ và tên</th>
+                                                        <th style="width: 120px; white-space: nowrap;">Ngày đặt</th>
+                                                        <th style="width: 160px; white-space: nowrap;">Phòng</th>
+                                                        <th style="width: 120px; white-space: nowrap;">Ngày đến</th>
+                                                        <th style="width: 120px; white-space: nowrap;">Ngày đi</th>
+                                                        <th style="width: 100px; white-space: nowrap;">Lớn/Nhỏ</th>
+                                                        <th style="width: 160px; white-space: nowrap;">Giá</th>
+                                                        <th style="width: 100px; white-space: nowrap;">Trạng thái</th>
+                                                        <th style="width: 160px; white-space: nowrap;">Tùy chọn</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody style="display: block; width: 100%;">
+                                                    <% bookings.forEach((b, index)=> { %>
+                                                        <tr style="display: table; table-layout: fixed; width: 100%;">
+                                                            <td style="width: 60px">
+                                                                <%= index + 1 %>
+                                                            </td>
+                                                            <td style="width: 60px">
+                                                                <%= b.booking_id %>
+                                                            </td>
+                                                            <td style="width: 180px">
+                                                                <%= b.name %>
+                                                            </td>
+                                                            <td style="width: 120px">
+                                                                <%= new Date(b.booking_date).toLocaleDateString("vi-VN")
+                                                                    %>
+                                                            </td>
+                                                            <td style="width: 160px">
+                                                                <%= b.room_name %>
+                                                            </td>
+                                                            <td style="width: 120px">
+                                                                <%= new
+                                                                    Date(b.check_in_date).toLocaleDateString("vi-VN") %>
+                                                            </td>
+                                                            <td style="width: 120px">
+                                                                <%= new
+                                                                    Date(b.check_out_date).toLocaleDateString("vi-VN")
+                                                                    %>
+                                                            </td>
+                                                            <td style="width: 100px">
+                                                                <%= b.adults %> / <%= b.children %>
+                                                            </td>
+                                                            <td style="width: 160px">
+                                                                <%= Number(b.total_price).toLocaleString("vi-VN")
+                                                                    + " vnđ" %>
+                                                            </td>
+                                                            <td style="width: 100px"
+                                                                class="<%= b.payment_status === 'paid' ? 'text-success' : (b.payment_status === 'failed' ? 'text-danger' : 'text-warning') %> fw-bold">
+                                                                    <%= b.payment_status === 'paid' ? 'Đã trả' : (b.payment_status === 'failed' ? 'Đã hủy' : 'Chưa trả') %>
+                                                            </td>
+                                                            <td style="width: 160px" class="text-nowrap">
+                                                                <div
+                                                                    class="d-flex justify-content-center gap-2 flex-wrap">
+                                                                    <% if (b.payment_status !== 'paid' && b.payment_status !== 'failed') { %>
+                                                                        <form id="cancel-form-<%= index %>"
+                                                                            action="/booking/cancel" method="POST">
+                                                                            <input type="hidden" name="booking_id"
+                                                                                value="<%= b.booking_id %>">
+                                                                            <button type="button"
+                                                                                class="btn btn-danger btn-sm"
+                                                                                onclick="confirmCancel(<%= index %>)">
+                                                                                Hủy đơn
+                                                                            </button>
+                                                                        </form>
+                                                                        
+                                                                        <!--  FORM THANH TOÁN ĐƯỢC SỬA -->
+                                                                        <form id="payment-form-<%= index %>" action="/api/checkout" method="POST">
+                                                                            <!-- Hiển thị thông tin để kiểm tra -->
+                                                                            <input type="hidden" name="debug_info" value="booking_id:<%= b.booking_id %>,room_type_id:<%= b.room_type_id %>,name:<%= b.name %>">
+                                                                            
+                                                                            <!-- Đảm bảo room_id có giá trị -->
+                                                                            <input type="hidden" name="room_id" value="<%= b.room_type_id || b.room_id || '1' %>">
+                                                                            
+                                                                            <!-- Format ngày đúng và kiểm tra null -->
+                                                                            <input type="hidden" name="checkin" value="<%= b.check_in_date ? new Date(b.check_in_date).toISOString().split('T')[0] : '2024-12-20' %>">
+                                                                            <input type="hidden" name="checkout" value="<%= b.check_out_date ? new Date(b.check_out_date).toISOString().split('T')[0] : '2024-12-21' %>">
+                                                                            
+                                                                            <!--  Đảm bảo adults/children có giá trị -->
+                                                                            <input type="hidden" name="adults" value="<%= b.adults || '1' %>">
+                                                                            <input type="hidden" name="children" value="<%= b.children || '0' %>">
+                                                                            
+                                                                            <!--  Đảm bảo fullname có giá trị -->
+                                                                            <input type="hidden" name="fullname" value="<%= b.name || 'Khách hàng' %>">
+                                                                            
+                                                                            <!--  Đảm bảo email và phone có giá trị -->
+                                                                            <input type="hidden" name="email" value="<%= b.guest_email || user.email || 'customer@example.com' %>">
+                                                                            <input type="hidden" name="phone" value="<%= b.guest_phone || user.phone || '0123456789' %>">
+                                                                            
+                                                                            <!--  Đảm bảo address có giá trị -->
+                                                                            <input type="hidden" name="address" value="<%= b.guest_address || user.address || 'Địa chỉ khách hàng' %>">
+                                                                            
+                                                                            <!--  Trường note -->
+                                                                            <input type="hidden" name="note" value="Thanh toán từ lịch sử giao dịch - Booking ID: <%= b.booking_id %>">
+                                                                            
+                                                                            <input type="hidden" name="paymentMethod" value="vnpay">
+                                                                            <input type="hidden" name="existing_booking_id" value="<%= b.booking_id %>">
+                                                                            
+                                                                            <button type="button" class="btn btn-success btn-sm" onclick="processVNPayPayment(<%= index %>)">
+                                                                                Thanh toán
+                                                                            </button>
+                                                                        </form>
+
+                                                                        <!-- Script để log thông tin booking -->
+                                                                        <script>
+                                                                            console.log('🔍 Booking <%= index %> Debug Info:', {
+                                                                                booking_id: '<%= b.booking_id %>',
+                                                                                room_type_id: '<%= b.room_type_id %>',
+                                                                                room_id: '<%= b.room_id %>',
+                                                                                name: '<%= b.name %>',
+                                                                                check_in_date: '<%= b.check_in_date %>',
+                                                                                check_out_date: '<%= b.check_out_date %>',
+                                                                                adults: '<%= b.adults %>',
+                                                                                children: '<%= b.children %>',
+                                                                                guest_email: '<%= b.guest_email %>',
+                                                                                guest_phone: '<%= b.guest_phone %>',
+                                                                                guest_address: '<%= b.guest_address %>'
+                                                                            });
+                                                                        </script>
+                                                                        
+                                                                        <% } else { %>
+                                                                            <span class="text-muted">Không khả
+                                                                                dụng</span>
+                                                                            <% } %>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <% }) %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <% } else { %>
+                                            <p class="text-center text-muted">Chưa có hóa đơn nào.</p>
+                                            <% } %>
+                                </div>
+                            </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <br><br><br><br><br>
+    <footer class="bg-light py-4" style="width: 100%" id="LH" style="margin-left: 0">
+        <div class="container" style="margin-top: 20px">
+            <div class="row">
+                <!-- Cột Liên Hệ -->
+                <div class="col-md-4">
+                    <h5 class="fw-bold">LIÊN HỆ CHÚNG TÔI</h5>
+
+                    <p>
+                        <i class="fas fa-envelope" style="color: #9d972d"></i> Email: 23004060@st.vlute.edu.vn
+                    </p>
+                    <p><i class="fas fa-phone" style="color: #28a745"></i></i> Số điện thoại: 0932-801-477-090
+                    </p>
+                    <p>
+                        <i class="fas fa-map-marker-alt" style="color: #dc3545"></i> Địa chỉ: 183B/19, quận Cam,
+                        thành phố Sài Gòn
+                    </p>
+                </div>
+
+                <!-- Cột Mạng Xã Hội -->
+                <div class="col-md-4 text-left">
+                    <h5 class="fw-bold">MẠNG XÃ HỘI</h5>
+                    <a href="https://www.instagram.com" target="_blank"
+                        class="d-block text-decoration-none text-dark mb-2">
+                        <i class="fab fa-instagram" style="
+                  background: linear-gradient(
+                    to right,
+                    #f09433 0%,
+                    #e6683c 25%,
+                    #dc2743 50%,
+                    #cc2366 75%,
+                    #bc1888 100%
+                  );
+                  -webkit-background-clip: text;
+                  -webkit-text-fill-color: transparent;
+                "></i> Instagram
+                    </a>
+                    <a href="https://www.facebook.com" target="_blank"
+                        class="d-block text-decoration-none text-dark mb-2">
+                        <i class="fab fa-facebook" style="color: #1877f2"></i> Facebook
+                    </a>
+                    <a href="https://www.youtube.com" target="_blank"
+                        class="d-block text-decoration-none text-dark mb-2">
+                        <i class="fab fa-youtube" style="color: #ff0000"></i> Youtube
+                    </a>
+                    <a href="https://www.twitter.com" target="_blank"
+                        class="d-block text-decoration-none text-dark mb-2">
+                        <i class="fab fa-twitter" style="color: #000000"></i> Twitter
+                    </a>
+                </div>
+
+                <!-- Cột Bản Đồ -->
+                <div class="col-md-4">
+                    <h5 class="fw-bold">MAPS</h5>
+                    <iframe src="https://www.google.com/maps?q=Vũng+Tàu&output=embed" width="100%" height="150"
+                        style="border: 0" allowfullscreen="" loading="lazy">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // ENHANCED VNPAY PAYMENT FUNCTION WITH DEBUG
+        function processVNPayPayment(index) {
+            //THÊM: Debug form data trước khi validate
+            const form = document.getElementById(`payment-form-${index}`);
+            const formData = new FormData(form);
+            
+            console.log('🔍 RAW FORM DATA:');
+            for (let [key, value] of formData.entries()) {
+                console.log(`  ${key}: "${value}"`);
+            }
+            
+            Swal.fire({
+                title: 'Xác nhận thanh toán',
+                text: "Bạn sẽ được chuyển hướng đến VNPay để thanh toán. Tiếp tục?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Thanh toán VNPay',
+                cancelButtonText: 'Hủy',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Hiển thị loading
+                    Swal.fire({
+                        title: 'Đang xử lý...',
+                        text: 'Vui lòng chờ trong giây lát',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    // SỬA: Tạo object và validate từng trường với fallback
+                    const paymentData = {
+                        room_id: formData.get('room_id') || '1',
+                        checkin: formData.get('checkin') || '2024-12-20',
+                        checkout: formData.get('checkout') || '2024-12-21',
+                        adults: formData.get('adults') || '1',
+                        children: formData.get('children') || '0',
+                        fullname: formData.get('fullname') || 'Khách hàng',
+                        email: formData.get('email') || 'customer@example.com',
+                        phone: formData.get('phone') || '0123456789',
+                        address: formData.get('address') || 'Địa chỉ khách hàng',
+                        paymentMethod: 'vnpay',
+                        note: formData.get('note') || 'Thanh toán từ lịch sử giao dịch',
+                        existing_booking_id: formData.get('existing_booking_id') || ''
+                    };
+
+                    // THÊM: Validate và clean dữ liệu
+                    console.log('🔧 CLEANED PAYMENT DATA:');
+                    Object.entries(paymentData).forEach(([key, value]) => {
+                        // Trim whitespace cho string values
+                        if (typeof value === 'string') {
+                            paymentData[key] = value.trim();
+                        }
+                        console.log(`  ${key}: "${paymentData[key]}"`);
+                    });
+
+                    // THÊM: Validate required fields với thông báo cụ thể
+                    const requiredFields = ['room_id', 'checkin', 'checkout', 'fullname', 'email', 'phone', 'address'];
+                    const missingFields = [];
+                    const emptyFields = [];
+                    
+                    requiredFields.forEach(field => {
+                        const value = paymentData[field];
+                        if (!value) {
+                            missingFields.push(field);
+                        } else if (typeof value === 'string' && value.trim() === '') {
+                            emptyFields.push(field);
+                        }
+                    });
+                    
+                    if (missingFields.length > 0 || emptyFields.length > 0) {
+                        Swal.close();
+                        
+                        let errorMessage = 'Lỗi dữ liệu form:\n';
+                        if (missingFields.length > 0) {
+                            errorMessage += `• Thiếu: ${missingFields.join(', ')}\n`;
+                        }
+                        if (emptyFields.length > 0) {
+                            errorMessage += `• Trống: ${emptyFields.join(', ')}\n`;
+                        }
+                        
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Thiếu thông tin',
+                            text: errorMessage,
+                            footer: '<small>Vui lòng kiểm tra console (F12) để xem chi tiết</small>'
+                        });
+                        return;
+                    }
+
+                    // THÊM: Validate định dạng email
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(paymentData.email)) {
+                        Swal.close();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Email không hợp lệ',
+                            text: `Email "${paymentData.email}" không đúng định dạng`
+                        });
+                        return;
+                    }
+
+                    // THÊM: Validate số điện thoại
+                    const phoneRegex = /^[0-9]{10,11}$/;
+                    if (!phoneRegex.test(paymentData.phone.replace(/\s+/g, ''))) {
+                        Swal.close();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Số điện thoại không hợp lệ',
+                            text: `Số điện thoại "${paymentData.phone}" phải có 10-11 chữ số`
+                        });
+                        return;
+                    }
+
+                    //  Validate room_id là số
+                    if (isNaN(parseInt(paymentData.room_id))) {
+                        Swal.close();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Room ID không hợp lệ',
+                            text: `Room ID "${paymentData.room_id}" phải là số`
+                        });
+                        return;
+                    }
+
+                    console.log('FINAL PAYMENT DATA (validated):', paymentData);
+
+                    fetch('/api/checkout', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(paymentData)
+                    })
+                    .then(async response => {
+                        console.log('📡 Response status:', response.status);
+                        console.log('📡 Response headers:', Object.fromEntries(response.headers.entries()));
+                        
+                        if (!response.ok) {
+                            let errorData;
+                            try {
+                                errorData = await response.json();
+                                console.error('❌ Error response JSON:', errorData);
+                            } catch (e) {
+                                const errorText = await response.text();
+                                console.error('❌ Error response text:', errorText);
+                                errorData = { message: errorText };
+                            }
+                            throw new Error(errorData.message || `HTTP ${response.status}`);
+                        }
+                        
+                        const contentType = response.headers.get("content-type");
+                        if (!contentType || !contentType.includes("application/json")) {
+                            const text = await response.text();
+                            console.error('❌ Non-JSON response:', text);
+                            throw new Error("Server returned non-JSON response: " + text.substring(0, 100));
+                        }
+                        
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Payment response:', data);
+                        Swal.close();
+                        
+                        if (data.success && data.payment_method === 'vnpay' && data.redirect_url) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Chuyển hướng đến VNPay',
+                                text: 'Bạn sẽ được chuyển đến trang thanh toán VNPay',
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                console.log('🌐 Redirecting to:', data.redirect_url);
+                                window.location.href = data.redirect_url;
+                            });
+                        } else if (data.success && data.payment_method === 'cash') {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'VNPay không khả dụng',
+                                text: 'Hệ thống đã chuyển về thanh toán tiền mặt. Bạn có thể thanh toán khi check-in.',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        } else {
+                            throw new Error(data.message || 'Không thể tạo link thanh toán VNPay');
+                        }
+                    })
+                    .catch(error => {
+                        Swal.close();
+                        console.error('💥 Payment error:', error);
+                        
+                        let errorMessage = 'Có lỗi xảy ra khi xử lý thanh toán';
+                        if (error.message.includes('Thiếu thông tin bắt buộc')) {
+                            errorMessage = 'Thiếu thông tin bắt buộc. Vui lòng kiểm tra lại dữ liệu booking.';
+                        } else if (error.message.includes('400')) {
+                            errorMessage = 'Thông tin thanh toán không hợp lệ: ' + error.message;
+                        } else if (error.message.includes('404')) {
+                            errorMessage = 'Không tìm thấy thông tin đặt phòng';
+                        } else if (error.message.includes('500')) {
+                            errorMessage = 'Lỗi hệ thống, vui lòng thử lại sau';
+                        } else if (error.message.includes('Failed to fetch')) {
+                            errorMessage = 'Lỗi kết nối mạng, vui lòng kiểm tra internet';
+                        }
+                        
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi thanh toán',
+                            text: errorMessage,
+                            footer: '<small>Chi tiết lỗi: ' + error.message + '</small>'
+                        });
+                    });
+                }
+            });
+        }
+
+        function confirmCancel(index) {
+            Swal.fire({
+                title: 'Bạn có chắc chắn?',
+                text: "Bạn muốn hủy hóa đơn này?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Có, hủy ngay!',
+                cancelButtonText: 'Không',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(`cancel-form-${index}`).submit();
+                }
+            });
+        }
+
+        function updateTyped(id) {
+            const value = document.getElementById(id).value;
+            document.getElementById("typed_" + id).innerText = value;
+        }
+
+        function toggleTyped(id) {
+            const checkbox = document.getElementById("showTyped_" + id);
+            const typedDiv = document.getElementById("typed_" + id);
+            if (checkbox.checked) {
+                typedDiv.style.display = "block";
+                updateTyped(id);
+            } else {
+                typedDiv.style.display = "none";
+            }
+        }
+
+        // 👁 Toggle password visibility
+        document.querySelectorAll(".toggle-password").forEach((icon) => {
+            icon.addEventListener("click", function () {
+                const input = document.getElementById(this.dataset.target);
+                if (input.type === "password") {
+                    input.type = "text";
+                    this.classList.replace("fa-eye", "fa-eye-slash");
+                } else {
+                    input.type = "password";
+                    this.classList.replace("fa-eye-slash", "fa-eye");
+                }
+            });
+        });
+
+        function showTab(tab) {
+            const infoTab = document.getElementById("tab-info");
+            const passwordTab = document.getElementById("tab-password");
+            const bookingTab = document.getElementById("tab-booking");
+
+            const btnInfo = document.getElementById("btn-info");
+            const btnPassword = document.getElementById("btn-password");
+            const btnBooking = document.getElementById("btn-booking");
+
+            // Ẩn hết
+            infoTab.style.display = "none";
+            passwordTab.style.display = "none";
+            bookingTab.style.display = "none";
+
+            // Reset style
+            btnInfo.className = "text-decoration-none text-secondary";
+            btnPassword.className = "text-decoration-none text-secondary";
+            btnBooking.className = "text-decoration-none text-secondary";
+
+            if (tab === "info") {
+                infoTab.style.display = "block";
+                btnInfo.className = "text-decoration-none fw-bold text-dark";
+            } else if (tab === "password") {
+                passwordTab.style.display = "block";
+                btnPassword.className = "text-decoration-none fw-bold text-dark";
+            } else if (tab === "booking") {
+                bookingTab.style.display = "block";
+                btnBooking.className = "text-decoration-none fw-bold text-dark";
+            }
+        }
+
+        //Kiểm tra xác nhận mật khẩu
+        function validatePassword() {
+            const newPassword = document.getElementById("newPassword").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+            if (newPassword !== confirmPassword) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Error',
+                    text: 'Mật khẩu và xác nhận mật khẩu không khớp.',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                return false;
+            }
+            return true;
+        }
+    </script>
+
+</body>
+</html>

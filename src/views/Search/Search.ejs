@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kết quả tìm kiếm - SweetHome</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+   <!-- css -->
+  <link rel="stylesheet" href="/stylesSearch.css" />
+  <style>
+    .card-img-top {
+      max-height: 200px;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+    <nav
+      class="navbar navbar-expand-lg navbar-light bg-light"
+      style="
+        width: 100%;
+        opacity: 80%;
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        left: 0;
+      "
+    >
+      <!-- Logo bên trái -->
+      <a class="navbar-brand" href="/">
+        <img
+          src="./image/image/logo/logo.jpg"
+          alt="Logo"
+          style="
+            margin: 0px;
+            padding: 0px;
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            margin-top: -50px;
+            margin-left: 70px;
+          "
+          class="logo"
+        />
+      </a>
+      <div class="container kt">
+        <!-- Nút Toggle khi màn hình nhỏ -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Danh mục menu (Căn giữa) -->
+        <div
+          class="collapse navbar-collapse justify-content-center"
+          id="navbarNav"
+          style="margin-left: 100px"
+        >
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="/" style="font-weight: bold"
+                >TRANG CHỦ</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/about" style="font-weight: bold"
+                >GIỚI THIỆU</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#CH" style="font-weight: bold"
+                >CĂN HỘ</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#LH" style="font-weight: bold"
+                >LIÊN HỆ</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#DG" style="font-weight: bold"
+                >ĐÁNH GIÁ</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <!-- Nút Đăng nhập/Đăng xuất (Bên phải) -->
+        <% if (user) { %>
+        <div class="dropdown">
+          <button
+            class="btn p-0 border-0 bg-transparent"
+            type="button"
+            id="userDropdown"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <img
+              src="https://i.postimg.cc/rF3Fh10Y/avatar-trang-4.jpg"
+              alt="Avatar"
+              class="rounded-circle"
+              width="40"
+              height="40"
+            />
+          </button>
+          <ul
+            class="dropdown-menu dropdown-menu-end shadow"
+            aria-labelledby="userDropdown"
+          >
+            <li>
+              <span class="dropdown-item text-primary fw-bold">
+                <%= user.email %>
+              </span>
+            </li>
+            <li>
+              <a class="dropdown-item" href="/account">Thông tin tài khoản</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="/bookings">Lịch sử đặt phòng</a>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+              <a class="dropdown-item text-danger" href="/logout">Đăng xuất</a>
+            </li>
+          </ul>
+        </div>
+        <% } else { %>
+        <button class="btn btn-primary" onclick="window.location.href='/login'">
+          ĐĂNG NHẬP
+        </button>
+        <% } %>
+      </div>
+    </nav>
+
+  <form action="/search" method="get" class="search-box">
+    <div class="m-2">
+      <label for="checkin" class="form-label" style="color: #707070; font-size: 18px">Ngày nhận</label>
+      <input type="date" class="form-control" id="checkin" name="checkin" value="<%= checkin %>" />
+    </div>
+    <div class="m-2">
+      <label for="checkout" class="form-label" style="color: #707070; font-size: 18px">Ngày trả</label>
+      <input type="date" class="form-control" id="checkout" name="checkout" value="<%= checkout %>" />
+    </div>
+    <div class="m-2">
+      <label for="adults" class="form-label" style="color: #707070; font-size: 18px">Người lớn</label>
+      <input type="number" class="form-control" id="adults" name="adults" value="<%= adults %>" />
+    </div>
+    <div class="m-2">
+      <label for="children" class="form-label" style="color: #707070; font-size: 18px">Trẻ em</label>
+      <input type="number" class="form-control" id="children" name="children" value="<%= children %>" />
+    </div>
+    <div class="m-2 align-self-end">
+      <button type="submit" class="btn btn-dark">Tìm</button>
+    </div>
+  </form>
+
+  <div class="container py-4">
+  <div class="row">
+    <!-- Bộ lọc bên trái -->
+   <div class="col-md-3">
+  <h5 class="mb-3">Bộ lọc</h5>
+  <form id="filterForm" method="get" action="/search">
+    <input type="hidden" name="checkin" value="<%= checkin %>">
+    <input type="hidden" name="checkout" value="<%= checkout %>">
+    <input type="hidden" name="adults" value="<%= adults %>">
+    <input type="hidden" name="children" value="<%= children %>">
+
+    <div class="mb-3">
+      <label class="form-label">Phường</label>
+      <select class="form-select" name="ward">
+        <option value="" <%= ward === "" ? "selected" : "" %>>Tất cả</option>
+        <option value="Phường 1" <%= ward === "Phường 1" ? "selected" : "" %>>Phường 1</option>
+        <option value="Phường 2" <%= ward === "Phường 2" ? "selected" : "" %>>Phường 2</option>
+        <option value="Phường 5" <%= ward === "Phường 5" ? "selected" : "" %>>Phường 5</option>
+        <option value="Phường Thắng Tam" <%= ward === "Phường Thắng Tam" ? "selected" : "" %>>Phường Thắng Tam</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Khoảng giá</label>
+      <select class="form-select" name="price">
+        <option value="" <%= price === "" ? "selected" : "" %>>Tất cả</option>
+        <option value="1" <%= price === "1" ? "selected" : "" %>>Dưới 500k</option>
+        <option value="2" <%= price === "2" ? "selected" : "" %>>500k - 1 triệu</option>
+        <option value="3" <%= price === "3" ? "selected" : "" %>>Trên 1 triệu</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Dịch vụ</label>
+      <select class="form-select" name="service">
+        <option value="" <%= service === "" ? "selected" : "" %>>Tất cả</option>
+        <option value="Wi-Fi miễn phí" <%= service === "Wi-Fi miễn phí" ? "selected" : "" %>>Wi-Fi miễn phí</option>
+        <option value="Điều hòa" <%= service === "Điều hòa" ? "selected" : "" %>>Điều hòa</option>
+        <option value="Hồ bơi" <%= service === "Hồ bơi" ? "selected" : "" %>>Hồ bơi</option>
+        <option value="Bãi đỗ xe" <%= service === "Bãi đỗ xe" ? "selected" : "" %>>Bãi đỗ xe</option>
+        <option value="Bữa sáng miễn phí" <%= service === "Bữa sáng miễn phí" ? "selected" : "" %>>Bữa sáng miễn phí</option>
+        <option value="TV màn hình phẳng" <%= service === "TV màn hình phẳng" ? "selected" : "" %>>TV màn hình phẳng</option>
+        <option value="Máy nước nóng" <%= service === "Máy nước nóng" ? "selected" : "" %>>Máy nước nóng</option>
+        <option value="Giặt ủi" <%= service === "Giặt ủi" ? "selected" : "" %>>Giặt ủi</option>
+        <option value="Phòng Gym" <%= service === "Phòng Gym" ? "selected" : "" %>>Phòng Gym</option>
+        <option value="Dịch vụ đưa đón sân bay" <%= service === "Dịch vụ đưa đón sân bay" ? "selected" : "" %>>Dịch vụ đưa đón sân bay</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Loại chỗ ở</label>
+      <select class="form-select" name="type">
+        <option value="" <%= type === "" ? "selected" : "" %>>Tất cả</option>
+        <option value="house" <%= type === "house" ? "selected" : "" %>>Nhà nguyên căn</option>
+        <option value="apartment" <%= type === "apartment" ? "selected" : "" %>>Phòng trong căn hộ</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Sắp xếp theo</label>
+      <select class="form-select" name="sort">
+        <option value="" <%= sort === "" ? "selected" : "" %>>Mặc định</option>
+        <option value="asc" <%= sort === "asc" ? "selected" : "" %>>Giá tăng dần</option>
+        <option value="desc" <%= sort === "desc" ? "selected" : "" %>>Giá giảm dần</option>
+      </select>
+    </div>
+
+    <div class="d-grid">
+      <button type="submit" class="btn" style="background-color: black; color: white ;">Áp dụng</button>
+    </div>
+  </form>
+</div>
+
+
+    <!-- Kết quả bên phải -->
+<!-- Kết quả bên phải - CHỈ BỎ THÔNG BÁO "CÓ SẴN SAU" -->
+<div class="col-md-9" id="roomResults">
+  <h5 class="text-muted mb-4">
+    Kết quả tìm kiếm cho: <%= checkin %> → <%= checkout %> | <%= adults %> người lớn, <%= children %> trẻ em
+  </h5>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="row mt-3">
+        <% if (rooms.length === 0) { %>
+          <p>Không tìm thấy phòng phù hợp.</p>
+        <% } %>
+
+        <% rooms.forEach(room => { %>
+          <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 d-flex flex-column shadow-sm border-0" style="transition: 0.3s;">
+              <img src="<%= room.thumbnail %>" class="card-img-top" alt="<%= room.name %>" style="height: 180px; object-fit: cover;">
+
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title mb-2 fw-semibold"><%= room.name %></h5>
+
+                <% if (room.price < 500000) { %>
+                  <span class="badge rounded-pill mb-1 px-3 py-1 text-white" style="background-color: #28a745;">🌼 Tiết kiệm</span>
+                <% } %>
+                <% if (room.avg_rating && room.avg_rating >= 4.5) { %>
+                  <span class="badge rounded-pill mb-2 px-3 py-1 text-white" style="background-color: #dc3545;">🔥 Yêu thích</span>
+                <% } %>
+
+                <% if (room.avg_rating) { %>
+                  <p class="text-warning mb-2">
+                    ⭐ <%= room.avg_rating %>/5
+                    <span class="text-muted">(<%= room.review_count %> đánh giá)</span>
+                  </p>
+                <% } %>
+
+                <!-- BỎ PHẦN THÔNG BÁO "CÓ SẴN SAU" -->
+
+                <p class="card-text flex-grow-1" style="font-size: 0.95rem;">
+                  <strong>Mô tả:</strong>
+                  <% if (room.description?.toLowerCase().includes("nhà nguyên căn")) { %>
+                    Nhà nguyên căn
+                  <% } else if (room.description?.toLowerCase().includes("phòng riêng trong căn hộ")) { %>
+                    Phòng riêng trong căn hộ
+                  <% } else { %>
+                    Không xác định
+                  <% } %>
+                  <br>
+
+                  <strong>Giá:</strong>
+                  <!-- ĐỔI MÀU GIÁ THÀNH ĐỎ -->
+                  <span class="price-tag" style="color: #e74c3c; font-weight: bold; font-size: 1.1rem;">
+                    <%= Number(room.price).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) %>
+                  </span>
+                  <small class="text-muted"> / đêm</small><br>
+                  
+                  <strong>Địa chỉ:</strong> <%= room.address %><br>
+
+                  <strong>Dịch vụ:</strong>
+                  <% if (room.services?.length) { %>
+                    <% room.services.forEach(service => { %>
+                      <span class="service-badge d-inline-block"><%= service %></span>
+                    <% }) %>
+                  <% } else { %>
+                    <span class="text-muted">Không có</span>
+                  <% } %>
+
+                </p>
+
+                <a href="/room/<%= room.slug %>" class="btn mt-auto px-3 py-2 fw-semibold"
+                   style="background-color: #a59a81; color: white; border-radius: 30px; transition: 0.2s;">
+                  Xem chi tiết
+                </a>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-light py-4" style="width: 100%" id="LH" style="margin-left: 0">
+    <div class="container" style="margin-top: 20px">
+      <div class="row">
+        <!-- Cột Liên Hệ -->
+        <div class="col-md-4">
+          <h5 class="fw-bold">LIÊN HỆ CHÚNG TÔI</h5>
+
+          <p>
+            <i class="fas fa-envelope" style="color: #9d972d"></i> Email: 23004060@st.vlute.edu.vn
+          </p>
+          <p><i class="fas fa-phone" style="color: #28a745"></i></i> Số điện thoại: 0932-801-477-090</p>
+          <p>
+            <i class="fas fa-map-marker-alt" style="color: #dc3545"></i> Địa chỉ: 183B/19, quận Cam,
+            thành phố Sài Gòn
+          </p>
+        </div>
+
+        <!-- Cột Mạng Xã Hội -->
+        <div class="col-md-4 text-left">
+          <h5 class="fw-bold">MẠNG XÃ HỘI</h5>
+          <a href="https://www.instagram.com" target="_blank" class="d-block text-decoration-none text-dark mb-2">
+            <i class="fab fa-instagram" style="
+                  background: linear-gradient(
+                    to right,
+                    #f09433 0%,
+                    #e6683c 25%,
+                    #dc2743 50%,
+                    #cc2366 75%,
+                    #bc1888 100%
+                  );
+                  -webkit-background-clip: text;
+                  -webkit-text-fill-color: transparent;
+                "></i> Instagram
+          </a>
+          <a href="https://www.facebook.com" target="_blank" class="d-block text-decoration-none text-dark mb-2">
+            <i class="fab fa-facebook" style="color: #1877f2"></i> Facebook
+          </a>
+          <a href="https://www.youtube.com" target="_blank" class="d-block text-decoration-none text-dark mb-2">
+            <i class="fab fa-youtube" style="color: #ff0000"></i> Youtube
+          </a>
+          <a href="https://www.twitter.com" target="_blank" class="d-block text-decoration-none text-dark mb-2">
+            <i class="fab fa-twitter" style="color: #000000"></i> Twitter
+          </a>
+        </div>
+
+        <!-- Cột Bản Đồ -->
+        <div class="col-md-4">
+          <h5 class="fw-bold">MAPS</h5>
+          <iframe src="https://www.google.com/maps?q=Vũng+Tàu&output=embed" width="100%" height="150" style="border: 0"
+            allowfullscreen="" loading="lazy">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <div class="text-center mt-3">
+    <p class="mb-0">© 2025 - All Rights Reserved</p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+  <script>
+    document.getElementById("checkin").value = "<%= checkin %>";
+    document.getElementById("checkout").value = "<%= checkout %>";
+    document.getElementById("adults").value = "<%= adults || '2' %>";
+    document.getElementById("children").value = "<%= children || '0' %>";
+  </script>
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("filterForm"); // <- nhớ form phải có id="filterForm"
+    const resultDiv = document.getElementById("roomResults");
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault(); // Ngăn form reload
+
+      const formData = new FormData(form);
+      const params = new URLSearchParams(formData);
+
+      try {
+        const res = await fetch(`/search/ajax?${params}`);
+        const html = await res.text();
+        resultDiv.innerHTML = html;
+
+        
+        history.pushState(null, '', `/search?${params}`);
+      } catch (err) {
+        console.error("Fetch error:", err);
+        resultDiv.innerHTML = "<p class='text-danger'>Không thể tải kết quả.</p>";
+      }
+    });
+  });
+</script>
+    <script src="https://cdn.botpress.cloud/webchat/v3.0/inject.js" defer></script>
+<script src="https://files.bpcontent.cloud/2025/06/13/11/20250613113629-T5H91F8W.js" defer></script>
+    
+</body>
+</html>
